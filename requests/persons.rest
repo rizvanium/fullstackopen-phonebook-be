@@ -1,0 +1,33 @@
+GET http://localhost:3001/api/persons
+
+###
+GET http://localhost:3001/api/persons/2
+
+###
+DELETE http://localhost:3001/api/persons/2
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Test Dummy",
+  "number": "40-20-1020304"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "",
+  "number": "40-20-1020304"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+  "name": "Test Dummy"
+}
