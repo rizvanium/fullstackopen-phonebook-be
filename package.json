@@ -1,5 +1,5 @@
 {
-  "name": "phonebook-be",
+  "name": "fullstackopen-phonebook-be",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,10 +11,12 @@
   "author": "rizvanium",
   "license": "MIT",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.18.2",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.4",
     "nodemon": "^3.0.1"
   }
 }
