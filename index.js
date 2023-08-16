@@ -81,7 +81,7 @@ app.post('/api/persons', (req, res) => {
   };
 
   persons = [...persons, newPerson];
-  res.json(newPerson);
+  res.status(201).json(newPerson);
 })
 
 app.delete('/api/persons/:id', (req, res) => {
