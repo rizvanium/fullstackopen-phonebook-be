@@ -53,14 +53,12 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = +req.params.id;
+  const id = req.params.id;
 
-  const requestedPerson = persons.find(person => person.id === id);
-  if (!requestedPerson) {
-    res.status(404).end();
-  }
-
-  res.json(requestedPerson);
+  Person.findById(id)
+    .then(person => {
+      res.json(person)
+    });
 })
 
 app.post('/api/persons', (req, res) => {
@@ -72,20 +70,13 @@ app.post('/api/persons', (req, res) => {
     });
   }
 
-  if (persons.find(p => p.name === name)) {
-    return res.status(400).json({
-      error: 'name must be unique',
+  const person = new Person({ name, number });
+
+  person
+    .save()
+    .then(response => {
+      res.status(201).json(response);
     });
-  }
-
-  const newPerson = {
-    id: getId(persons),
-    name: name,
-    number: number
-  };
-
-  persons = [...persons, newPerson];
-  res.status(201).json(newPerson);
 })
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -105,14 +96,3 @@ const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`server is listening on port: ${PORT}`);
 })
-
-function getId(persons) {
-  if (persons.length === 0) return 0;
-  return getRandomInt(0, Number.MAX_SAFE_INTEGER);
-}
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min);
-}
