@@ -16,50 +16,34 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
 
-let persons = [
-    { 
-      "id": 1,
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": 2,
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": 3,
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": 4,
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-];
-
 app.get('/api/info', (req, res) => {
-  const requestTime = new Date();
-  const peopleCount = persons ? persons.length : 0;
-  res.send(`<p>Phonebook has info about ${peopleCount} people</p>
-            <p>${requestTime}</p>`);
-})
+  Person.find({})
+    .then(persons => {
+      const peopleCount = persons ? persons.length : 0;
+      res.send(`<p>Phonebook has info about ${peopleCount} people</p>
+      <p>${new Date()}</p>`);
+    });
+});
 
 app.get('/api/persons', (req, res) => {
   Person.find({}).then(persons => {
     res.json(persons);
   })
-})
+});
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
   const id = req.params.id;
 
   Person.findById(id)
     .then(person => {
-      res.json(person)
-    });
-})
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).end();
+      }
+    })
+    .catch(error => next(error));
+});
 
 app.post('/api/persons', (req, res) => {
   const {name, number} = req.body;
@@ -77,22 +61,17 @@ app.post('/api/persons', (req, res) => {
     .then(response => {
       res.status(201).json(response);
     });
-})
+});
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = +req.params.id;
-  const requestedPerson = persons.find(person => person.id === id);
+  const id = req.params.id;
 
-  if (!requestedPerson) {
-    res.status(404).end();
-  }
-
-  persons = persons.filter(person => person.id !== id);
-  
-  res.status(204).end();
-})
+  Person.findByIdAndRemove(id)
+    .then(() => res.status(204).end())
+    .catch(error => next(error));
+});
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`server is listening on port: ${PORT}`);
-})
+});
