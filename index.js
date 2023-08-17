@@ -99,7 +99,7 @@ app.delete('/api/persons/:id', (req, res) => {
   res.status(204).end();
 })
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`server is listening on port: ${PORT}`);
 })
