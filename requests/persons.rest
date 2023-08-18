@@ -4,7 +4,7 @@ GET http://localhost:3001/api/persons
 GET http://localhost:3001/api/persons/some_id
 
 ###
-DELETE http://localhost:3001/api/persons/64de83941260ec933b70d199
+DELETE http://localhost:3001/api/persons/64df3253306875a9c588009e
 
 ###
 POST http://localhost:3001/api/persons
@@ -37,5 +37,5 @@ PUT http://localhost:3001/api/persons/64df1469b452591feef21d40
 Content-Type: application/json
 
 {
-  "name": ""
+  "name": "1"
 }

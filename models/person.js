@@ -15,7 +15,11 @@ mongoose.connect(uri)
   });
 
 const personSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    required: true,
+    minLength: 3,
+  },
   number: String
 });
 
