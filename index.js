@@ -32,9 +32,7 @@ app.get('/api/persons', (req, res) => {
 });
 
 app.get('/api/persons/:id', (req, res, next) => {
-  const id = req.params.id;
-
-  Person.findById(id)
+  Person.findById(req.params.id)
     .then(person => {
       if (person) {
         res.json(person);
@@ -45,8 +43,8 @@ app.get('/api/persons/:id', (req, res, next) => {
     .catch(error => next(error));
 });
 
-app.post('/api/persons', (req, res) => {
-  const {name, number} = req.body;
+app.post('/api/persons', (req, res, next) => {
+  const { name, number } = req.body;
 
   if (!name || !number) {
     return res.status(400).json({
@@ -56,20 +54,40 @@ app.post('/api/persons', (req, res) => {
 
   const person = new Person({ name, number });
 
-  person
-    .save()
-    .then(response => {
-      res.status(201).json(response);
-    });
+  person.save()
+    .then(response => res.status(201).json(response))
+    .catch(error => next(error));
 });
 
-app.delete('/api/persons/:id', (req, res) => {
-  const id = req.params.id;
+app.put('/api/persons/:id', (req, res, next) => {
+  const { name, number } = req.body;
 
-  Person.findByIdAndRemove(id)
+  const person = { name, number };
+
+  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then(updatedPerson => {
+      res.json(updatedPerson);
+    })
+    .catch(error => next(error));
+});
+
+app.delete('/api/persons/:id', (req, res, next) => {
+  Person.findByIdAndRemove(req.params.id)
     .then(() => res.status(204).end())
     .catch(error => next(error));
 });
+
+const errorHandler = (error, req, res, next) => {
+  console.log(error.message);
+
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  }
+
+  res.status(500).end();
+}
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
