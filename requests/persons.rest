@@ -11,8 +11,8 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-  "name": "Test Dummy",
-  "number": "40-20-1020304"
+  "name": "Regex Test Dummy",
+  "number": "0041-3454"
 }
 
 ###
