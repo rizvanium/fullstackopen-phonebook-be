@@ -4,7 +4,7 @@ GET http://localhost:3001/api/persons
 GET http://localhost:3001/api/persons/some_id
 
 ###
-DELETE http://localhost:3001/api/persons/2
+DELETE http://localhost:3001/api/persons/64de83941260ec933b70d199
 
 ###
 POST http://localhost:3001/api/persons
@@ -33,10 +33,9 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:3001/api/persons/64de83941260ec933b70d199
+PUT http://localhost:3001/api/persons/64df1469b452591feef21d40
 Content-Type: application/json
 
 {
-  "name": "Test Dummy",
-  "number": "00-00-0000000"
+  "name": ""
 }

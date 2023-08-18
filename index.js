@@ -11,9 +11,9 @@ morgan.token('body', (req, res) => {
   return stringBody === '{}' ? ' ' : stringBody;
 });
 
-app.use(express.static('dist'))
 app.use(cors());
 app.use(express.json());
+app.use(express.static('dist'))
 app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
 
 app.get('/api/info', (req, res) => {
@@ -66,6 +66,9 @@ app.put('/api/persons/:id', (req, res, next) => {
 
   Person.findByIdAndUpdate(req.params.id, person, { new: true })
     .then(updatedPerson => {
+      if (!updatedPerson) {
+        res.status(404).end();
+      }
       res.json(updatedPerson);
     })
     .catch(error => next(error));
@@ -73,7 +76,13 @@ app.put('/api/persons/:id', (req, res, next) => {
 
 app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then(() => res.status(204).end())
+    .then(removedPerson => {
+      if (removedPerson) {
+        res.status(204).end();
+      } else {
+        res.status(404).end();
+      }
+    })
     .catch(error => next(error));
 });
 
@@ -84,7 +93,7 @@ const errorHandler = (error, req, res, next) => {
     return res.status(400).send({ error: 'malformatted id' })
   }
 
-  res.status(500).end();
+  next(error);
 }
 
 app.use(errorHandler);
